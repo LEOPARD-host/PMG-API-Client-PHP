@@ -1,30 +1,32 @@
-This class provides the building blocks for someone wanting to use PHP to talk to Proxmox 2.0.
+This class provides the building blocks for someone wanting to use PHP to talk to Proxmox MG.
 Relatively simple piece of code, just provides a get/put/post/delete abstraction layer as methods
 on top of Proxmox's REST API, while also handling the Login Ticket headers required for authentication.
 
-See http://pve.proxmox.com/wiki/Proxmox_VE_API for information about how this API works.
-API spec available at http://pve.proxmox.com/pve2-api-doc/
+See https://pmg.proxmox.com/pmg-docs/pmg-admin-guide.html for information about how this API works.
+API browser available at: https://pmg.proxmox.com/pmg-docs/api-viewer/index.html
+
+WIP: Repo being adapted, tested & deployed for PMG, not PVE.
 
 ## Requirements: ##
 
-PHP 5 with cURL (including SSL) support.
+PHP 7 with cURL (including SSL/TLS) support.
 
 ## Usage: ##
 
 Example - Return status array for each Proxmox Host in this cluster.
 
-    require("./pve2-api-php-client/pve2_api.class.php");
+    require("./PMG-API-PHP-Client/pmg_api.class.php");
 
     # You can try/catch exception handle the constructor here if you want.
-    $pve2 = new PVE2_API("hostname", "username", "realm", "password");
+    $pve2 = new PMG_API("hostname", "username", "realm", "password");
     # realm above can be pve, pam or any other realm available.
 
     /* Optional - enable debugging. It print()'s any results currently */
-    // $pve2->set_debug(true);
+    // $pmg->set_debug(true);
 
-    if ($pve2->login()) {
-        foreach ($pve2->get_node_list() as $node_name) {
-            print_r($pve2->get("/nodes/".$node_name."/status"));
+    if ($pmg->login()) {
+        foreach ($pmg->get_node_list() as $node_name) {
+            print_r($pmg->get("/nodes/".$node_name."/status"));
         }
     } else {
         print("Login to Proxmox Host failed.\n");

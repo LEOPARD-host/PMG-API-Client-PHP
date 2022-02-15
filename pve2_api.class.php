@@ -25,9 +25,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-class PVE2_Exception extends RuntimeException {}
+class PMG_Exception extends RuntimeException {}
 
-class PVE2_API {
+class PMG_API {
 	protected $hostname;
 	protected $username;
 	protected $realm;
@@ -41,19 +41,19 @@ class PVE2_API {
 
 	public function __construct ($hostname, $username, $realm, $password, $port = 8006, $verify_ssl = false) {
 		if (empty($hostname) || empty($username) || empty($realm) || empty($password) || empty($port)) {
-			throw new PVE2_Exception("Hostname/Username/Realm/Password/Port required for PVE2_API object constructor.", 1);
+			throw new PMG_Exception("Hostname/Username/Realm/Password/Port required for PMG_API object constructor.", 1);
 		}
 		// Check hostname resolves.
 		if (gethostbyname($hostname) == $hostname && !filter_var($hostname, FILTER_VALIDATE_IP)) {
-			throw new PVE2_Exception("Cannot resolve {$hostname}.", 2);
+			throw new PMG_Exception("Cannot resolve {$hostname}.", 2);
 		}
 		// Check port is between 1 and 65535.
 		if (!filter_var($port, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'max_range' => 65535]])) {
-			throw new PVE2_Exception("Port must be an integer between 1 and 65535.", 6);
+			throw new PMG_Exception("Port must be an integer between 1 and 65535.", 6);
 		}
 		// Check that verify_ssl is boolean.
 		if (!is_bool($verify_ssl)) {
-			throw new PVE2_Exception("verify_ssl must be boolean.", 7);
+			throw new PMG_Exception("verify_ssl must be boolean.", 7);
 		}
 
 		$this->hostname   = $hostname;
@@ -66,7 +66,7 @@ class PVE2_API {
 
 	/*
 	 * bool login ()
-	 * Performs login to PVE Server using JSON API, and obtains Access Ticket.
+	 * Performs login to PMG Server using JSON API, and obtains Access Ticket.
 	 */
 	public function login () {
 		// Prepare login variables.
@@ -106,7 +106,7 @@ class PVE2_API {
 			// Just to be safe, set this to null again.
 			$this->login_ticket_timestamp = null;
 			if ($login_request_info['ssl_verify_result'] == 1) {
-				throw new PVE2_Exception("Invalid SSL cert on {$this->hostname} - check that the hostname is correct, and that it appears in the server certificate's SAN list. Alternatively set the verify_ssl flag to false if you are using internal self-signed certs (ensure you are aware of the security risks before doing so).", 4);
+				throw new PMG_Exception("Invalid SSL cert on {$this->hostname} - check that the hostname is correct, and that it appears in the server certificate's SAN list. Alternatively set the verify_ssl flag to false if you are using internal self-signed certs (ensure you are aware of the security risks before doing so).", 4);
 			}
 			return false;
 		} else {
@@ -121,15 +121,15 @@ class PVE2_API {
 		}
 	}
 
-	# Sets the PVEAuthCookie
+	# Sets the PMGAuthCookie
 	# Attetion, after using this the user is logged into the web interface aswell!
 	# Use with care, and DO NOT use with root, it may harm your system
 	public function setCookie() {
 		if (!$this->check_login_ticket()) {
-			throw new PVE2_Exception("Not logged into Proxmox host. No Login access ticket found or ticket expired.", 3);
+			throw new PMG_Exception("Not logged into Proxmox host. No Login access ticket found or ticket expired.", 3);
 		}
 
-		setrawcookie("PVEAuthCookie", $this->login_ticket['ticket'], 0, "/");
+		setrawcookie("PMGAuthCookie", $this->login_ticket['ticket'], 0, "/");
 	}
 
 	/*
@@ -165,7 +165,7 @@ class PVE2_API {
 		}
 
 		if (!$this->check_login_ticket()) {
-			throw new PVE2_Exception("Not logged into Proxmox host. No Login access ticket found or ticket expired.", 3);
+			throw new PMG_Exception("Not logged into Proxmox host. No Login access ticket found or ticket expired.", 3);
 		}
 
 		// Prepare cURL resource.
@@ -209,13 +209,13 @@ class PVE2_API {
 				curl_setopt($prox_ch, CURLOPT_HTTPHEADER, $put_post_http_headers);
 				break;
 			default:
-				throw new PVE2_Exception("Error - Invalid HTTP Method specified.", 5);
+				throw new PMG_Exception("Error - Invalid HTTP Method specified.", 5);
 				return false;
 		}
 
 		curl_setopt($prox_ch, CURLOPT_HEADER, true);
 		curl_setopt($prox_ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($prox_ch, CURLOPT_COOKIE, "PVEAuthCookie=".$this->login_ticket['ticket']);
+		curl_setopt($prox_ch, CURLOPT_COOKIE, "PMGAuthCookie=".$this->login_ticket['ticket']);
 		curl_setopt($prox_ch, CURLOPT_SSL_VERIFYPEER, false);
 		curl_setopt($prox_ch, CURLOPT_SSL_VERIFYHOST, false);
 
@@ -361,7 +361,7 @@ class PVE2_API {
 		return $this->action($action_path, "DELETE");
 	}
 
-	// Logout not required, PVEAuthCookie tokens have a 2 hour lifetime.
+	// Logout not required, PMGAuthCookie tokens have a 2 hour lifetime.
 }
 
 ?>

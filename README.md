@@ -1,4 +1,4 @@
-This class provides the building blocks for someone wanting to use PHP to talk to Proxmox MG.
+This class provides the building blocks for someone wanting to use PHP to talk to Proxmox's API.
 Relatively simple piece of code, just provides a get/put/post/delete abstraction layer as methods
 on top of Proxmox's REST API, while also handling the Login Ticket headers required for authentication.
 
@@ -21,9 +21,6 @@ Example - Return status array for each Proxmox Host in this cluster.
     $pve2 = new PMG_API("hostname", "username", "realm", "password");
     # realm above can be pve, pam or any other realm available.
 
-    /* Optional - enable debugging. It print()'s any results currently */
-    // $pmg->set_debug(true);
-
     if ($pmg->login()) {
         foreach ($pmg->get_node_list() as $node_name) {
             print_r($pmg->get("/nodes/".$node_name."/status"));
@@ -40,9 +37,6 @@ Example - Create a new OpenVZ Container on the first host in the cluster.
     # You can try/catch exception handle the constructor here if you want.
     $pve2 = new PVE2_API("hostname", "username", "realm", "password");
     # realm above can be pve, pam or any other realm available.
-
-    /* Optional - enable debugging. It print()'s any results currently */
-    // $pve2->set_debug(true);
 
     if ($pve2->login()) {
 
@@ -80,9 +74,6 @@ Example - Modify DNS settings on an existing container on the first host.
     $pve2 = new PVE2_API("hostname", "username", "realm", "password");
     # realm above can be pve, pam or any other realm available.
 
-    /* Optional - enable debugging. It print()'s any results currently */
-    // $pve2->set_debug(true);
-
     if ($pve2->login()) {
 
         # Get first node name.
@@ -108,9 +99,6 @@ Example - Delete an existing container.
     # You can try/catch exception handle the constructor here if you want.
     $pve2 = new PVE2_API("hostname", "username", "realm", "password");
     # realm above can be pve, pam or any other realm available.
-
-    /* Optional - enable debugging. It print()'s any results currently */
-    // $pve2->set_debug(true);
 
     if ($pve2->login()) {
         # NOTE - replace XXXX with node short name, and YYYY with container ID.

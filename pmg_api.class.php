@@ -2,9 +2,9 @@
 
 /*
 
-Proxmox VE APIv2 (PVE2) Client - PHP Class
+Proxmox API Client - PHP Class (Was for VE, forked for MG)
 
-Copyright (c) 2012-2014 Nathan Sullivan
+Copyright (c) Nathan Sullivan
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in

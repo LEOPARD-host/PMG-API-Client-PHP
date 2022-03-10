@@ -9,7 +9,7 @@ WIP: Repo being adapted, tested & deployed for PMG, not PVE.
 
 ## Requirements: ##
 
-PHP 7 with cURL (including SSL/TLS) support.
+PHP 5/7 with cURL (including SSL/TLS) support.
 
 ## Usage: ##
 
